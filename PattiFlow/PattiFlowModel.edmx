@@ -1,0 +1,657 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="PattiFlowModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Agent">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" Nullable="false" />
+          <Property Name="AgentName" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="AgentPhoneNumber" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="AgentAdvance">
+          <Key>
+            <PropertyRef Name="VoucherNumber" />
+          </Key>
+          <Property Name="VoucherNumber" Type="int" Nullable="false" />
+          <Property Name="Date" Type="nvarchar" MaxLength="50" />
+          <Property Name="AgentName" Type="nvarchar" MaxLength="50" />
+          <Property Name="AdvanceAmount" Type="int" />
+          <Property Name="Narration" Type="nvarchar(max)" />
+        </EntityType>
+        <EntityType Name="FreightVoucher">
+          <Key>
+            <PropertyRef Name="InvoiceNo" />
+          </Key>
+          <Property Name="InvoiceNo" Type="int" Nullable="false" />
+          <Property Name="FreightAmount" Type="numeric" Precision="18" Scale="0" />
+          <Property Name="FreightAdvance" Type="numeric" Precision="18" Scale="0" />
+          <Property Name="FreightBalance" Type="numeric" Precision="18" Scale="0" />
+          <Property Name="Narration" Type="nvarchar(max)" />
+        </EntityType>
+        <EntityType Name="Godown">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" Nullable="false" />
+          <Property Name="Name" Type="varchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="ItemDescription">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" Nullable="false" />
+          <Property Name="Description" Type="varchar" MaxLength="50" />
+          <Property Name="IsActive" Type="bit" Nullable="false" />
+          <Property Name="ItemTypeID" Type="int" />
+        </EntityType>
+        <EntityType Name="ItemType">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" Nullable="false" />
+          <Property Name="ItemName" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="IsActive" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Lorry">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" Nullable="false" />
+          <Property Name="LorryNumber" Type="int" />
+          <Property Name="DriverName" Type="nvarchar" MaxLength="50" />
+          <Property Name="DriverPhoneNumber" Type="int" />
+        </EntityType>
+        <EntityType Name="PattiCreation">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="PattiNumber" Type="int" Nullable="false" />
+          <Property Name="VoucherNumber" Type="int" Nullable="false" />
+          <Property Name="Date" Type="nvarchar" MaxLength="50" />
+          <Property Name="AgentName" Type="nvarchar" MaxLength="50" />
+          <Property Name="AgentPlace" Type="nvarchar" MaxLength="50" />
+          <Property Name="AdvanceAmount" Type="int" />
+          <Property Name="Weighment" Type="nvarchar" MaxLength="50" />
+          <Property Name="WeighBridgeLess" Type="nvarchar" MaxLength="50" />
+          <Property Name="Gunnies" Type="nvarchar" MaxLength="50" />
+          <Property Name="PurchaseType" Type="nvarchar" MaxLength="50" />
+          <Property Name="BagWeight" Type="int" />
+          <Property Name="GunnyWeight" Type="nvarchar" MaxLength="50" />
+          <Property Name="CommPerBag" Type="int" />
+          <Property Name="RusumPerBag" Type="int" />
+          <Property Name="Lesskg" Type="int" />
+        </EntityType>
+        <EntityType Name="PattiItems">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="VoucherNumber" Type="int" Nullable="false" />
+          <Property Name="Date" Type="nvarchar" MaxLength="50" />
+          <Property Name="ItemNumber" Type="int" />
+          <Property Name="NumberOfGunnies" Type="int" />
+          <Property Name="BagWeight" Type="int" />
+          <Property Name="WeightInBags" Type="int" />
+          <Property Name="WeighBridge" Type="nvarchar" MaxLength="50" />
+          <Property Name="WeighmentLess" Type="nvarchar" MaxLength="50" />
+          <Property Name="WeighmentIn" Type="nvarchar" MaxLength="50" />
+          <Property Name="Shortage" Type="int" />
+          <Property Name="ShortageAmount" Type="int" />
+          <Property Name="RateInBags" Type="int" />
+          <Property Name="TotalFreight" Type="int" />
+          <Property Name="AdvanceFreight" Type="int" />
+          <Property Name="CommissionAmount" Type="int" />
+          <Property Name="RusumAmount" Type="int" />
+          <Property Name="PayableAmount" Type="int" />
+        </EntityType>
+        <EntityType Name="PurchaseOrder">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="InvoiceNo" Type="int" />
+          <Property Name="Date" Type="varchar" MaxLength="50" />
+          <Property Name="LorryType" Type="varchar" MaxLength="50" />
+          <Property Name="LorryNo" Type="int" />
+          <Property Name="AgentName" Type="varchar" MaxLength="50" />
+          <Property Name="OwnersName" Type="varchar" MaxLength="50" />
+          <Property Name="FarmerName" Type="varchar" MaxLength="50" />
+          <Property Name="Address" Type="varchar" MaxLength="50" />
+          <Property Name="Place" Type="varchar" MaxLength="50" />
+          <Property Name="WayBillNo" Type="int" />
+          <Property Name="WeighBridgeQuantity" Type="int" />
+          <Property Name="Rate/Kgs" Type="int" />
+          <Property Name="WeighBridgeLess" Type="bit" />
+          <Property Name="HadFreightVoucher" Type="bit" />
+        </EntityType>
+        <EntityType Name="PurchaseOrderItems">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ItemType" Type="varchar" MaxLength="50" />
+          <Property Name="ItemDescription" Type="varchar" MaxLength="50" />
+          <Property Name="GodownName" Type="varchar" MaxLength="50" />
+          <Property Name="NumberOfGunnies" Type="int" />
+          <Property Name="BagWeight" Type="int" />
+          <Property Name="NumberOfBags" Type="int" />
+          <Property Name="ExcessShortkgs" Type="int" />
+          <Property Name="NetWeight" Type="int" />
+          <Property Name="Rate" Type="int" />
+          <Property Name="Amount" Type="int" />
+          <Property Name="PurchaseOrderId" Type="int" />
+        </EntityType>
+        <EntityType Name="PurchaseType">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" Nullable="false" />
+          <Property Name="Name" Type="varchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="UserRoles">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" Nullable="false" />
+          <Property Name="UserName" Type="nvarchar" MaxLength="50" />
+          <Property Name="Password" Type="nvarchar" MaxLength="50" />
+        </EntityType>
+        <Association Name="abc">
+          <End Role="PurchaseOrder" Type="Self.PurchaseOrder" Multiplicity="0..1" />
+          <End Role="PurchaseOrderItems" Type="Self.PurchaseOrderItems" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PurchaseOrder">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="PurchaseOrderItems">
+              <PropertyRef Name="PurchaseOrderId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="test">
+          <End Role="PurchaseOrder" Type="Self.PurchaseOrder" Multiplicity="1" />
+          <End Role="FreightVoucher" Type="Self.FreightVoucher" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="PurchaseOrder">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="FreightVoucher">
+              <PropertyRef Name="InvoiceNo" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="xyz">
+          <End Role="ItemType" Type="Self.ItemType" Multiplicity="0..1" />
+          <End Role="ItemDescription" Type="Self.ItemDescription" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ItemType">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="ItemDescription">
+              <PropertyRef Name="ItemTypeID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="PattiFlowModelStoreContainer">
+          <EntitySet Name="Agent" EntityType="Self.Agent" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="AgentAdvance" EntityType="Self.AgentAdvance" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="FreightVoucher" EntityType="Self.FreightVoucher" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Godown" EntityType="Self.Godown" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ItemDescription" EntityType="Self.ItemDescription" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ItemType" EntityType="Self.ItemType" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Lorry" EntityType="Self.Lorry" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="PattiCreation" EntityType="Self.PattiCreation" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="PattiItems" EntityType="Self.PattiItems" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="PurchaseOrder" EntityType="Self.PurchaseOrder" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="PurchaseOrderItems" EntityType="Self.PurchaseOrderItems" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="PurchaseType" EntityType="Self.PurchaseType" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="UserRoles" EntityType="Self.UserRoles" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="abc" Association="Self.abc">
+            <End Role="PurchaseOrder" EntitySet="PurchaseOrder" />
+            <End Role="PurchaseOrderItems" EntitySet="PurchaseOrderItems" />
+          </AssociationSet>
+          <AssociationSet Name="test" Association="Self.test">
+            <End Role="PurchaseOrder" EntitySet="PurchaseOrder" />
+            <End Role="FreightVoucher" EntitySet="FreightVoucher" />
+          </AssociationSet>
+          <AssociationSet Name="xyz" Association="Self.xyz">
+            <End Role="ItemType" EntitySet="ItemType" />
+            <End Role="ItemDescription" EntitySet="ItemDescription" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="PattiFlowModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="UserRole">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" />
+          <Property Name="UserName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Password" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityContainer Name="PattiFlowEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="UserRoles" EntityType="Self.UserRole" />
+          <EntitySet Name="Agents" EntityType="PattiFlowModel.Agent" />
+          <EntitySet Name="Godowns" EntityType="PattiFlowModel.Godown" />
+          <EntitySet Name="ItemDescriptions" EntityType="PattiFlowModel.ItemDescription" />
+          <EntitySet Name="ItemTypes" EntityType="PattiFlowModel.ItemType" />
+          <EntitySet Name="Lorries" EntityType="PattiFlowModel.Lorry" />
+          <EntitySet Name="PurchaseOrders" EntityType="PattiFlowModel.PurchaseOrder" />
+          <EntitySet Name="PurchaseTypes" EntityType="PattiFlowModel.PurchaseType" />
+          <AssociationSet Name="xyz" Association="PattiFlowModel.xyz">
+            <End Role="ItemType" EntitySet="ItemTypes" />
+            <End Role="ItemDescription" EntitySet="ItemDescriptions" />
+          </AssociationSet>
+          <EntitySet Name="PurchaseOrderItems" EntityType="PattiFlowModel.PurchaseOrderItem" />
+          <AssociationSet Name="abc" Association="PattiFlowModel.abc">
+            <End Role="PurchaseOrder" EntitySet="PurchaseOrders" />
+            <End Role="PurchaseOrderItem" EntitySet="PurchaseOrderItems" />
+          </AssociationSet>
+          <EntitySet Name="FreightVouchers" EntityType="PattiFlowModel.FreightVoucher" />
+          <AssociationSet Name="test" Association="PattiFlowModel.test">
+            <End Role="PurchaseOrder" EntitySet="PurchaseOrders" />
+            <End Role="FreightVoucher" EntitySet="FreightVouchers" />
+          </AssociationSet>
+          <EntitySet Name="AgentAdvances" EntityType="PattiFlowModel.AgentAdvance" />
+          <EntitySet Name="PattiCreations" EntityType="PattiFlowModel.PattiCreation" />
+          <EntitySet Name="PattiItems" EntityType="PattiFlowModel.PattiItem" />
+        </EntityContainer>
+        <EntityType Name="Agent">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" />
+          <Property Name="AgentName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="AgentPhoneNumber" Type="Int32" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Godown">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="ItemDescription">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" />
+          <Property Name="Description" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="IsActive" Type="Boolean" Nullable="false" />
+          <Property Name="ItemTypeID" Type="Int32" />
+          <NavigationProperty Name="ItemType" Relationship="PattiFlowModel.xyz" FromRole="ItemDescription" ToRole="ItemType" />
+        </EntityType>
+        <EntityType Name="ItemType">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" />
+          <Property Name="ItemName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="IsActive" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="ItemDescriptions" Relationship="PattiFlowModel.xyz" FromRole="ItemType" ToRole="ItemDescription" />
+        </EntityType>
+        <EntityType Name="Lorry">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" />
+          <Property Name="LorryNumber" Type="Int32" />
+          <Property Name="DriverName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="DriverPhoneNumber" Type="Int32" />
+        </EntityType>
+        <EntityType Name="PurchaseOrder">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" />
+          <Property Name="InvoiceNo" Type="Int32" />
+          <Property Name="Date" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="LorryType" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="LorryNo" Type="Int32" />
+          <Property Name="AgentName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="OwnersName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="FarmerName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Address" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Place" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="WayBillNo" Type="Int32" />
+          <Property Name="WeighBridgeQuantity" Type="Int32" />
+          <Property Name="Rate_Kgs" Type="Int32" />
+          <Property Name="WeighBridgeLess" Type="Boolean" />
+          <NavigationProperty Name="PurchaseOrderItems" Relationship="PattiFlowModel.abc" FromRole="PurchaseOrder" ToRole="PurchaseOrderItem" />
+          <NavigationProperty Name="FreightVoucher" Relationship="PattiFlowModel.test" FromRole="PurchaseOrder" ToRole="FreightVoucher" />
+          <Property Name="HadFreightVoucher1" Type="Boolean" />
+        </EntityType>
+        <EntityType Name="PurchaseType">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <Association Name="xyz">
+          <End Type="PattiFlowModel.ItemType" Role="ItemType" Multiplicity="0..1" />
+          <End Type="PattiFlowModel.ItemDescription" Role="ItemDescription" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ItemType">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="ItemDescription">
+              <PropertyRef Name="ItemTypeID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="PurchaseOrderItem">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" />
+          <Property Name="ItemType" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="ItemDescription" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="GodownName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="NumberOfGunnies" Type="Int32" />
+          <Property Name="BagWeight" Type="Int32" />
+          <Property Name="NumberOfBags" Type="Int32" />
+          <Property Name="ExcessShortkgs" Type="Int32" />
+          <Property Name="NetWeight" Type="Int32" />
+          <Property Name="Rate" Type="Int32" />
+          <Property Name="Amount" Type="Int32" />
+          <Property Name="PurchaseOrderId" Type="Int32" />
+          <NavigationProperty Name="PurchaseOrder" Relationship="PattiFlowModel.abc" FromRole="PurchaseOrderItem" ToRole="PurchaseOrder" />
+        </EntityType>
+        <Association Name="abc">
+          <End Type="PattiFlowModel.PurchaseOrder" Role="PurchaseOrder" Multiplicity="0..1" />
+          <End Type="PattiFlowModel.PurchaseOrderItem" Role="PurchaseOrderItem" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PurchaseOrder">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="PurchaseOrderItem">
+              <PropertyRef Name="PurchaseOrderId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="FreightVoucher">
+          <Key>
+            <PropertyRef Name="InvoiceNo" />
+          </Key>
+          <Property Name="InvoiceNo" Type="Int32" Nullable="false" />
+          <Property Name="FreightAmount" Type="Decimal" Precision="18" Scale="0" />
+          <Property Name="FreightAdvance" Type="Decimal" Precision="18" Scale="0" />
+          <Property Name="FreightBalance" Type="Decimal" Precision="18" Scale="0" />
+          <Property Name="Narration" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="PurchaseOrder" Relationship="PattiFlowModel.test" FromRole="FreightVoucher" ToRole="PurchaseOrder" />
+        </EntityType>
+        <Association Name="test">
+          <End Type="PattiFlowModel.PurchaseOrder" Role="PurchaseOrder" Multiplicity="1" />
+          <End Type="PattiFlowModel.FreightVoucher" Role="FreightVoucher" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="PurchaseOrder">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="FreightVoucher">
+              <PropertyRef Name="InvoiceNo" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="AgentAdvance">
+          <Key>
+            <PropertyRef Name="VoucherNumber" />
+          </Key>
+          <Property Name="VoucherNumber" Type="Int32" Nullable="false" />
+          <Property Name="Date" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="AgentName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="AdvanceAmount" Type="Int32" />
+          <Property Name="Narration" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="PattiCreation">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" />
+          <Property Name="PattiNumber" Type="Int32" Nullable="false" />
+          <Property Name="VoucherNumber" Type="Int32" Nullable="false" />
+          <Property Name="Date" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="AgentName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="AgentPlace" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="AdvanceAmount" Type="Int32" />
+          <Property Name="Weighment" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="WeighBridgeLess" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Gunnies" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="PurchaseType" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="BagWeight" Type="Int32" />
+          <Property Name="GunnyWeight" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="CommPerBag" Type="Int32" />
+          <Property Name="RusumPerBag" Type="Int32" />
+          <Property Name="Lesskg" Type="Int32" />
+        </EntityType>
+        <EntityType Name="PattiItem">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" />
+          <Property Name="VoucherNumber" Type="Int32" Nullable="false" />
+          <Property Name="Date" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="ItemNumber" Type="Int32" />
+          <Property Name="NumberOfGunnies" Type="Int32" />
+          <Property Name="BagWeight" Type="Int32" />
+          <Property Name="WeightInBags" Type="Int32" />
+          <Property Name="WeighBridge" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="WeighmentLess" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="WeighmentIn" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Shortage" Type="Int32" />
+          <Property Name="ShortageAmount" Type="Int32" />
+          <Property Name="RateInBags" Type="Int32" />
+          <Property Name="TotalFreight" Type="Int32" />
+          <Property Name="AdvanceFreight" Type="Int32" />
+          <Property Name="CommissionAmount" Type="Int32" />
+          <Property Name="RusumAmount" Type="Int32" />
+          <Property Name="PayableAmount" Type="Int32" />
+        </EntityType>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="PattiFlowModelStoreContainer" CdmEntityContainer="PattiFlowEntities">
+          <EntitySetMapping Name="UserRoles">
+            <EntityTypeMapping TypeName="PattiFlowModel.UserRole">
+              <MappingFragment StoreEntitySet="UserRoles">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="UserName" ColumnName="UserName" />
+                <ScalarProperty Name="Password" ColumnName="Password" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Agents">
+            <EntityTypeMapping TypeName="PattiFlowModel.Agent">
+              <MappingFragment StoreEntitySet="Agent">
+                <ScalarProperty Name="AgentPhoneNumber" ColumnName="AgentPhoneNumber" />
+                <ScalarProperty Name="AgentName" ColumnName="AgentName" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Godowns">
+            <EntityTypeMapping TypeName="PattiFlowModel.Godown">
+              <MappingFragment StoreEntitySet="Godown">
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ItemDescriptions">
+            <EntityTypeMapping TypeName="PattiFlowModel.ItemDescription">
+              <MappingFragment StoreEntitySet="ItemDescription">
+                <ScalarProperty Name="ItemTypeID" ColumnName="ItemTypeID" />
+                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ItemTypes">
+            <EntityTypeMapping TypeName="PattiFlowModel.ItemType">
+              <MappingFragment StoreEntitySet="ItemType">
+                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
+                <ScalarProperty Name="ItemName" ColumnName="ItemName" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Lorries">
+            <EntityTypeMapping TypeName="PattiFlowModel.Lorry">
+              <MappingFragment StoreEntitySet="Lorry">
+                <ScalarProperty Name="DriverPhoneNumber" ColumnName="DriverPhoneNumber" />
+                <ScalarProperty Name="DriverName" ColumnName="DriverName" />
+                <ScalarProperty Name="LorryNumber" ColumnName="LorryNumber" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="PurchaseOrders">
+            <EntityTypeMapping TypeName="PattiFlowModel.PurchaseOrder">
+              <MappingFragment StoreEntitySet="PurchaseOrder">
+                <ScalarProperty Name="HadFreightVoucher1" ColumnName="HadFreightVoucher" />
+                <ScalarProperty Name="WeighBridgeLess" ColumnName="WeighBridgeLess" />
+                <ScalarProperty Name="Rate_Kgs" ColumnName="Rate/Kgs" />
+                <ScalarProperty Name="WeighBridgeQuantity" ColumnName="WeighBridgeQuantity" />
+                <ScalarProperty Name="WayBillNo" ColumnName="WayBillNo" />
+                <ScalarProperty Name="Place" ColumnName="Place" />
+                <ScalarProperty Name="Address" ColumnName="Address" />
+                <ScalarProperty Name="FarmerName" ColumnName="FarmerName" />
+                <ScalarProperty Name="OwnersName" ColumnName="OwnersName" />
+                <ScalarProperty Name="AgentName" ColumnName="AgentName" />
+                <ScalarProperty Name="LorryNo" ColumnName="LorryNo" />
+                <ScalarProperty Name="LorryType" ColumnName="LorryType" />
+                <ScalarProperty Name="Date" ColumnName="Date" />
+                <ScalarProperty Name="InvoiceNo" ColumnName="InvoiceNo" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="PurchaseTypes">
+            <EntityTypeMapping TypeName="PattiFlowModel.PurchaseType">
+              <MappingFragment StoreEntitySet="PurchaseType">
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="PurchaseOrderItems">
+            <EntityTypeMapping TypeName="PattiFlowModel.PurchaseOrderItem">
+              <MappingFragment StoreEntitySet="PurchaseOrderItems">
+                <ScalarProperty Name="PurchaseOrderId" ColumnName="PurchaseOrderId" />
+                <ScalarProperty Name="Amount" ColumnName="Amount" />
+                <ScalarProperty Name="Rate" ColumnName="Rate" />
+                <ScalarProperty Name="NetWeight" ColumnName="NetWeight" />
+                <ScalarProperty Name="ExcessShortkgs" ColumnName="ExcessShortkgs" />
+                <ScalarProperty Name="NumberOfBags" ColumnName="NumberOfBags" />
+                <ScalarProperty Name="BagWeight" ColumnName="BagWeight" />
+                <ScalarProperty Name="NumberOfGunnies" ColumnName="NumberOfGunnies" />
+                <ScalarProperty Name="GodownName" ColumnName="GodownName" />
+                <ScalarProperty Name="ItemDescription" ColumnName="ItemDescription" />
+                <ScalarProperty Name="ItemType" ColumnName="ItemType" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="FreightVouchers">
+            <EntityTypeMapping TypeName="PattiFlowModel.FreightVoucher">
+              <MappingFragment StoreEntitySet="FreightVoucher">
+                <ScalarProperty Name="Narration" ColumnName="Narration" />
+                <ScalarProperty Name="FreightBalance" ColumnName="FreightBalance" />
+                <ScalarProperty Name="FreightAdvance" ColumnName="FreightAdvance" />
+                <ScalarProperty Name="FreightAmount" ColumnName="FreightAmount" />
+                <ScalarProperty Name="InvoiceNo" ColumnName="InvoiceNo" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="AgentAdvances">
+            <EntityTypeMapping TypeName="PattiFlowModel.AgentAdvance">
+              <MappingFragment StoreEntitySet="AgentAdvance">
+                <ScalarProperty Name="Narration" ColumnName="Narration" />
+                <ScalarProperty Name="AdvanceAmount" ColumnName="AdvanceAmount" />
+                <ScalarProperty Name="AgentName" ColumnName="AgentName" />
+                <ScalarProperty Name="Date" ColumnName="Date" />
+                <ScalarProperty Name="VoucherNumber" ColumnName="VoucherNumber" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="PattiCreations">
+            <EntityTypeMapping TypeName="PattiFlowModel.PattiCreation">
+              <MappingFragment StoreEntitySet="PattiCreation">
+                <ScalarProperty Name="Lesskg" ColumnName="Lesskg" />
+                <ScalarProperty Name="RusumPerBag" ColumnName="RusumPerBag" />
+                <ScalarProperty Name="CommPerBag" ColumnName="CommPerBag" />
+                <ScalarProperty Name="GunnyWeight" ColumnName="GunnyWeight" />
+                <ScalarProperty Name="BagWeight" ColumnName="BagWeight" />
+                <ScalarProperty Name="PurchaseType" ColumnName="PurchaseType" />
+                <ScalarProperty Name="Gunnies" ColumnName="Gunnies" />
+                <ScalarProperty Name="WeighBridgeLess" ColumnName="WeighBridgeLess" />
+                <ScalarProperty Name="Weighment" ColumnName="Weighment" />
+                <ScalarProperty Name="AdvanceAmount" ColumnName="AdvanceAmount" />
+                <ScalarProperty Name="AgentPlace" ColumnName="AgentPlace" />
+                <ScalarProperty Name="AgentName" ColumnName="AgentName" />
+                <ScalarProperty Name="Date" ColumnName="Date" />
+                <ScalarProperty Name="VoucherNumber" ColumnName="VoucherNumber" />
+                <ScalarProperty Name="PattiNumber" ColumnName="PattiNumber" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="PattiItems">
+            <EntityTypeMapping TypeName="PattiFlowModel.PattiItem">
+              <MappingFragment StoreEntitySet="PattiItems">
+                <ScalarProperty Name="PayableAmount" ColumnName="PayableAmount" />
+                <ScalarProperty Name="RusumAmount" ColumnName="RusumAmount" />
+                <ScalarProperty Name="CommissionAmount" ColumnName="CommissionAmount" />
+                <ScalarProperty Name="AdvanceFreight" ColumnName="AdvanceFreight" />
+                <ScalarProperty Name="TotalFreight" ColumnName="TotalFreight" />
+                <ScalarProperty Name="RateInBags" ColumnName="RateInBags" />
+                <ScalarProperty Name="ShortageAmount" ColumnName="ShortageAmount" />
+                <ScalarProperty Name="Shortage" ColumnName="Shortage" />
+                <ScalarProperty Name="WeighmentIn" ColumnName="WeighmentIn" />
+                <ScalarProperty Name="WeighmentLess" ColumnName="WeighmentLess" />
+                <ScalarProperty Name="WeighBridge" ColumnName="WeighBridge" />
+                <ScalarProperty Name="WeightInBags" ColumnName="WeightInBags" />
+                <ScalarProperty Name="BagWeight" ColumnName="BagWeight" />
+                <ScalarProperty Name="NumberOfGunnies" ColumnName="NumberOfGunnies" />
+                <ScalarProperty Name="ItemNumber" ColumnName="ItemNumber" />
+                <ScalarProperty Name="Date" ColumnName="Date" />
+                <ScalarProperty Name="VoucherNumber" ColumnName="VoucherNumber" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

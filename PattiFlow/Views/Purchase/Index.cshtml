@@ -1,0 +1,568 @@
+﻿@model PattiFlow.Models.PurchaseViewModel
+@Scripts.Render("~/bundles/jquery")
+@Scripts.Render("~/bundles/bootstrap")
+
+<script src="~/JsGrid/dist/jsgrid.min.js"></script>
+<link href="~/JsGrid/css/jsgrid.css" rel="stylesheet" />
+<link href="~/JsGrid/css/theme.css" rel="stylesheet" />
+
+<script type="text/javascript">
+    jQuery(document).ready(function ($) {
+        $('#drpLorryNo').hide();
+        $('#agent a').on('click', dropdownToggleAgent);
+        $('#LorryType a').on('click', dropdownToggleLorryType);
+        $('#RateKg a').on('click', dropdownToggleRateKg);
+        $('#WeighBridgeLess a').on('click', dropdownToggleWeighBridgeLess);
+        $('#gunnyBagWeight a').on('click', dropdownTogglegunnyBagWeight);
+        $('#LorryNo a').on('click', dropdownToggleLorryNo);
+        $('#savedModal').hide();
+        $('#freightButton').hide();
+        $('#FreightModel_FreightAmount').change(function () {
+            $('#FreightModel_FreightBalance').val($('#FreightModel_FreightAmount').val() - $('#FreightModel_FreightAdvance').val());
+        })
+        $('#FreightModel_FreightAdvance').change(function () {
+            $('#FreightModel_FreightBalance').val($('#FreightModel_FreightAmount').val() - $('#FreightModel_FreightAdvance').val());
+        })
+        $("#jsGrid").jsGrid({
+            width: "100%",
+            height: "170px",
+
+            inserting: true,
+            editing: true,
+            sorting: true,
+            paging: true,
+
+            onItemInserting: function (args) {
+                args.item["Net weight"] = (args.item["Bag Wt"] * args.item["Bags"]) / args.item["Excess/Short"];
+            },
+
+            onItemUpdating: function (args) {
+                args.item["Net weight"] = (args.item["Bag Wt"] * args.item["Bags"]) / args.item["Excess/Short"];
+                args.previousItem["Net weight"] = args.item["Net weight"];
+            },
+
+            fields: [
+                { name: "SNo", type: "number", width: 35, validate: "required" },
+                { name: "Item Type", type: "text", width: 50 },
+                { name: "Description", type: "text", width: 100 },
+                { name: "Godown", type: "text", width: 50 },
+                { name: "Gunnies", type: "number", width: 50 },
+                { name: "Bag Wt", type: "number", width: 50 },
+                { name: "Bags", type: "number", width: 50 },
+                { name: "Excess/Short", type: "number", width: 70 },
+                { name: "Net weight", width: 50, editing: false },
+                { name: "Rate", type: "number", width: 50 },
+                { name: "Amount", type: "number", width: 50 },
+                { type: "control" }
+            ]
+        });
+
+        $('#btnSubmit').click(function () {
+            var gridData = $("#jsGrid").jsGrid("option", "data");
+            var params = {
+                'things': []
+            };
+
+            for (var i = 0; i < gridData.length; i++) {
+                var thing = {
+                    ItemType: gridData[i]['Item Type'],
+                    ItemDescription: gridData[i]['Description'],
+                    GodownName: gridData[i]['Godown'],
+                    NumberOfGunnies: gridData[i]['Gunnies'],
+                    BagWeight: gridData[i]['Bag Wt'],
+                    NumberOfBags: gridData[i]['Bags'],
+                    ExcessShortkgs: gridData[i]['Excess/Short'],
+                    NetWeight: gridData[i]['Net weight'],
+                    Rate: gridData[i]['Rate'],
+                    Amount: gridData[i]['Amount'],
+                    PurchaseOrderId: $('#myHiddenVar').val()
+                };
+                params.things.push(thing);
+            }
+            gridData = JSON.stringify(params);
+
+            $.ajax({
+                url: "/Purchase/SavePurchaseOrderItems",
+                method: "POST",
+                data: gridData,
+                contentType: 'application/json',
+                success: function (data) {
+
+                }
+            });
+        })
+
+        $('#freightVoucher').click(function () {
+            $('#freightButton').toggle();
+        })
+
+        $('#btnFreightSubmit').click(function () {
+            $('#freightModal').modal('hide');
+            var model = {
+                FreightAmount: $('#FreightModel_FreightAmount').val(),
+                FreightAdvance: $('#FreightModel_FreightAdvance').val(),
+                FreightBalance: $('#FreightModel_FreightBalance').val(),
+                Narration: $('#FreightModel_Narration').val()
+            };
+            var formData = JSON.stringify(model)
+            $.ajax({
+                url: "/Purchase/SaveFreightData",
+                method: "POST",
+                data: formData,
+                contentType: 'application/json',
+                success: function (data) {
+                    $('#savedModal').modal();
+                }
+            });
+        })
+
+        function dropdownToggleAgent() {
+            // select the main dropdown button element
+            var dropdown = $(this).parent().parent().prev();
+
+            // change the CONTENT of the button based on the content of selected option
+            dropdown.html($(this).html() + '&nbsp;</i><span class="caret"></span>');
+
+            // change the VALUE of the button based on the data-value property of selected option
+            dropdown.val($(this).prop('data-value'));
+
+            $('#AgentName').val($(this).html());
+        }
+
+        function dropdownToggleLorryType() {
+            var dropdown = $(this).parent().parent().prev();
+            dropdown.html($(this).html() + '&nbsp;</i><span class="caret"></span>');
+            dropdown.val($(this).prop('data-value'));
+            $('#LorryType').val($(this).html());
+            if ($('#LorryType').val() == "Own") {
+                $('#txtLorryNo').hide();
+                $('#drpLorryNo').show();
+            }
+            else {
+                $('#drpLorryNo').hide();
+                $('#txtLorryNo').show();
+            }
+        }
+
+        function dropdownToggleLorryNo() {
+            var dropdown = $(this).parent().parent().prev();
+            dropdown.html($(this).html() + '&nbsp;</i><span class="caret"></span>');
+            dropdown.val($(this).prop('data-value'));
+            $('#LorryNo').val($(this).html());
+        }
+
+        function dropdownToggleRateKg() {
+            var dropdown = $(this).parent().parent().prev();
+            dropdown.html($(this).html() + '&nbsp;</i><span class="caret"></span>');
+            dropdown.val($(this).prop('data-value'));
+            $('#Rate_Kgs').val($(this).html());
+        }
+
+        function dropdownToggleWeighBridgeLess() {
+            var dropdown = $(this).parent().parent().prev();
+            dropdown.html($(this).html() + '&nbsp;</i><span class="caret"></span>');
+            dropdown.val($(this).prop('data-value'));
+            $('#WeighBridgeLess').val($(this).html());
+        }
+
+        function dropdownTogglegunnyBagWeight() {
+            var dropdown = $(this).parent().parent().prev();
+            dropdown.html($(this).html() + '&nbsp;</i><span class="caret"></span>');
+            dropdown.val($(this).prop('data-value'));
+            $('#gunnyBagWeight').val($(this).html());
+        }
+    })
+
+
+</script>
+<style>
+
+    .card {
+        border: 0;
+        border-radius: 0px;
+        margin-bottom: 30px;
+        -webkit-box-shadow: 0 2px 3px rgba(0,0,0,0.03);
+        box-shadow: 0 2px 3px rgba(0,0,0,0.03);
+        -webkit-transition: .5s;
+        transition: .5s;
+        position: relative;
+        display: -ms-flexbox;
+        display: flex;
+        -ms-flex-direction: column;
+        flex-direction: column;
+        min-width: 0;
+        word-wrap: break-word;
+        background-color: #fff;
+        background-clip: border-box;
+        border: 1px solid rgba(0,0,0,.125);
+        border-radius: .25rem;
+    }
+
+    .card-title {
+        font-family: Roboto,sans-serif;
+        font-weight: 300;
+        line-height: 1.5;
+        margin-bottom: 0;
+        padding: 15px 20px;
+        border-bottom: 1px solid rgba(77,82,89,0.07);
+    }
+
+    .card-body {
+        -ms-flex: 1 1 auto;
+        flex: 1 1 auto;
+        padding: 1.25rem;
+    }
+
+    .grid {
+        font-family: Roboto,sans-serif;
+        color: #4d5259;
+        font-weight: 300;
+        font-size: 13px;
+        line-height: 24px;
+    }
+
+    .main-content {
+        //padding: 30px 30px 0;
+        -webkit-box-flex: 1;
+        flex: 1 0 auto;
+    }
+
+    h4 {
+        font-size: 17px;
+    }
+
+    body {
+        background-color: #f7fafc;
+    }
+
+    .jsgrid input {
+        border: 1px solid #ebebeb;
+    }
+</style>
+
+
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    <input type="hidden" value="@Session["PurchaseId"]" id="myHiddenVar" />
+    <body>
+        <div id="accordion">
+            <div class="card">
+                <div class="card-header" id="headingOne">
+                    <h5 class="mb-0">
+                        <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne" onclick="return false">
+                            Purchase Order
+                        </button>
+                    </h5>
+                </div>
+
+                <div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#accordion">
+                    <div class="card-body">
+                        <div class="form-horizontal" style="font-size:11px">
+                            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                            <div class="form-group">
+                                <div class="form-row">
+                                    <div class="col-md-3">
+                                        @Html.LabelFor(model => model.PurchaseModel.InvoiceNo)
+                                        @Html.EditorFor(model => model.PurchaseModel.InvoiceNo, new { htmlAttributes = new { @class = "form-control", @readOnly = "readOnly" } })
+                                        @Html.ValidationMessageFor(model => model.PurchaseModel.InvoiceNo, "", new { @class = "text-danger" })
+                                    </div>
+
+
+                                    <div class="col-md-3">
+                                        @Html.LabelFor(model => model.PurchaseModel.Date)
+                                        @Html.EditorFor(model => model.PurchaseModel.Date, new { htmlAttributes = new { @class = "form-control", @readOnly = "readOnly" } })
+                                        @Html.ValidationMessageFor(model => model.PurchaseModel.Date, "", new { @class = "text-danger" })
+                                    </div>
+
+
+                                    <div class="col-md-3">
+                                        @Html.LabelFor(model => model.PurchaseModel.LorryType)
+                                        <input type="hidden" id="LorryType" name="LorryType" value="" />
+                                        <div class="dropdown">
+                                            <button class="btn btn-default dropdown-toggle col-md-12" type="button" data-toggle="dropdown">
+                                                Select
+                                                <span class="caret"></span>
+                                            </button>
+                                            <ul class="dropdown-menu" id="LorryType">
+                                                @foreach (var item in ViewBag.LorryType)
+                                                {
+                                                    <li><a href="#" data-value="1">@item</a></li>
+                                                }
+
+                                            </ul>
+                                        </div>
+                                        @Html.ValidationMessageFor(model => model.PurchaseModel.LorryType, "", new { @class = "text-danger" })
+                                    </div>
+
+
+                                    <div class="col-md-3" id="txtLorryNo">
+                                        @Html.LabelFor(model => model.PurchaseModel.LorryNo)
+                                        @Html.EditorFor(model => model.PurchaseModel.LorryNo, new { htmlAttributes = new { @class = "form-control" } })
+                                        @Html.ValidationMessageFor(model => model.PurchaseModel.LorryNo, "", new { @class = "text-danger" })
+                                    </div>
+                                    <div class="col-md-3" id="drpLorryNo">
+                                        @Html.LabelFor(model => model.PurchaseModel.LorryNo)
+                                        <input type="hidden" id="LorryNo" name="LorryNo" value="" />
+                                        <div class="dropdown">
+                                            <button class="btn btn-default dropdown-toggle col-md-12" type="button" data-toggle="dropdown">
+                                                Select
+                                                <span class="caret"></span>
+                                            </button>
+                                            <ul class="dropdown-menu" id="LorryNo">
+                                                @foreach (var item in ViewBag.LorryNumber)
+                                                {
+                                                    <li><a href="#" data-value="1">@item</a></li>
+                                                }
+
+                                            </ul>
+                                        </div>
+                                        @*@Html.DropDownListFor(model=>model.agentName,new SelectList(ViewBag.Agents),"Select", new { htmlAttributes = new { @class = "form-control dropdown input-sm" } })*@
+                                        @Html.ValidationMessageFor(model => model.PurchaseModel.LorryNo, "", new { @class = "text-danger" })
+                                    </div>
+
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <div class="form-row">
+                                    <div class="col-md-3">
+                                        @Html.LabelFor(model => model.PurchaseModel.AgentName)
+                                        <input type="hidden" id="AgentName" name="AgentName" value="" />
+                                        <div class="dropdown">
+                                            <button class="btn btn-default dropdown-toggle col-md-12" type="button" data-toggle="dropdown">
+                                                Select
+                                                <span class="caret"></span>
+                                            </button>
+                                            <ul class="dropdown-menu" id="agent">
+                                                @foreach (var item in ViewBag.Agents)
+                                                {
+                                                    <li><a href="#" data-value="1">@item</a></li>
+                                                }
+
+                                            </ul>
+                                        </div>
+                                        @Html.ValidationMessageFor(model => model.PurchaseModel.AgentName, "", new { @class = "text-danger" })
+                                    </div>
+                                    <div class="col-md-3">
+                                        @Html.LabelFor(model => model.PurchaseModel.OwnersName)
+                                        @Html.EditorFor(model => model.PurchaseModel.OwnersName, new { htmlAttributes = new { @class = "form-control" } })
+                                        @Html.ValidationMessageFor(model => model.PurchaseModel.OwnersName, "", new { @class = "text-danger" })
+                                    </div>
+                                    <div class="col-md-3">
+                                        @Html.LabelFor(model => model.PurchaseModel.FarmerName)
+                                        @Html.EditorFor(model => model.PurchaseModel.FarmerName, new { htmlAttributes = new { @class = "form-control" } })
+                                        @Html.ValidationMessageFor(model => model.PurchaseModel.FarmerName, "", new { @class = "text-danger" })
+                                    </div>
+                                    <div class="col-md-3">
+                                        @Html.LabelFor(model => model.PurchaseModel.Address)
+                                        @Html.EditorFor(model => model.PurchaseModel.Address, new { htmlAttributes = new { @class = "form-control" } })
+                                        @Html.ValidationMessageFor(model => model.PurchaseModel.Address, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <div class="col-md-3">
+                                    @Html.LabelFor(model => model.PurchaseModel.Place)
+                                    @Html.EditorFor(model => model.PurchaseModel.Place, new { htmlAttributes = new { @class = "form-control" } })
+                                    @Html.ValidationMessageFor(model => model.PurchaseModel.Place, "", new { @class = "text-danger" })
+                                </div>
+                                <div class="col-md-3">
+                                    @Html.LabelFor(model => model.PurchaseModel.WayBillNo)
+                                    @Html.EditorFor(model => model.PurchaseModel.WayBillNo, new { htmlAttributes = new { @class = "form-control" } })
+                                    @Html.ValidationMessageFor(model => model.PurchaseModel.WayBillNo, "", new { @class = "text-danger" })
+                                </div>
+                                <div class="col-md-3">
+                                    @Html.LabelFor(model => model.PurchaseModel.WeighBridgeQuantity)
+                                    @Html.EditorFor(model => model.PurchaseModel.WeighBridgeQuantity, new { htmlAttributes = new { @class = "form-control" } })
+                                    @Html.ValidationMessageFor(model => model.PurchaseModel.WeighBridgeQuantity, "", new { @class = "text-danger" })
+                                </div>
+                                <div class="col-md-3">
+                                    @Html.LabelFor(model => model.PurchaseModel.Rate_Kgs)
+                                    <input type="hidden" id="Rate_Kgs" name="Rate_Kgs" value="" />
+                                    <div class="dropdown">
+                                        <button class="btn btn-default dropdown-toggle col-md-12" type="button" data-toggle="dropdown">
+                                            Select
+                                            <span class="caret"></span>
+                                        </button>
+                                        <ul class="dropdown-menu" id="RateKg">
+                                            @foreach (var item in ViewBag.RateKg)
+                                            {
+                                                <li><a href="#" data-value="1">@item</a></li>
+                                            }
+
+                                        </ul>
+                                    </div>
+                                    @Html.ValidationMessageFor(model => model.PurchaseModel.Rate_Kgs, "", new { @class = "text-danger" })
+                                </div>
+
+                            </div>
+
+                            <div class="form-group">
+                                <div class="col-md-3">
+                                    @Html.LabelFor(model => model.PurchaseModel.WeighBridgeLess)
+                                    <input type="hidden" id="WeighBridgeLess" name="WeighBridgeLess" value="" />
+                                    <div class="dropdown">
+                                        <button class="btn btn-default dropdown-toggle col-md-12" type="button" data-toggle="dropdown">
+                                            Select
+                                            <span class="caret"></span>
+                                        </button>
+                                        <ul class="dropdown-menu" id="WeighBridgeLess">
+                                            @foreach (var item in ViewBag.WeighBridgeLess)
+                                            {
+                                                <li><a href="#" data-value="1">@item</a></li>
+                                            }
+
+                                        </ul>
+                                    </div>
+                                    @Html.ValidationMessageFor(model => model.PurchaseModel.WeighBridgeLess, "", new { @class = "text-danger" })
+
+                                </div>
+                                <div class="col-md-3">
+                                    @Html.LabelFor(model => model.PurchaseModel.gunnyBagWeight)
+                                    <input type="hidden" id="gunnyBagWeight" name="gunnyBagWeight" value="" />
+                                    <div class="dropdown">
+                                        <button class="btn btn-default dropdown-toggle col-md-12" type="button" data-toggle="dropdown">
+                                            Select
+                                            <span class="caret"></span>
+                                        </button>
+                                        <ul class="dropdown-menu" id="gunnyBagWeight">
+                                            @foreach (var item in ViewBag.gunnyBagWeight)
+                                            {
+                                                <li><a href="#" data-value="1">@item</a></li>
+                                            }
+
+                                        </ul>
+                                    </div>
+                                    @Html.ValidationMessageFor(model => model.PurchaseModel.gunnyBagWeight, "", new { @class = "text-danger" })
+                                </div>
+                                <div class="col-md-3" style="padding-top:30px">
+                                    <input type="checkbox" id="freightVoucher" style="padding-top:15px"/>
+                                    @Html.LabelFor(model => model.PurchaseModel.HadFreightVoucher)
+
+                                </div>
+                                <div class="col-md-3">
+                                    <br />
+                                    <input type="submit" value="Save" class="btn btn-primary" />
+                                    <input type="submit" value="Cancel" class="btn btn-default" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-header" id="headingTwo">
+                    <h5 class="mb-0">
+                        <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo" onclick="return false">
+                            Purchase Order Items
+                        </button>
+                    </h5>
+                </div>
+                <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordion">
+                    <div class="card-body">
+                        <div class="main-content">
+                            <div class="cardGrid grid">
+                                <h4 class="card-title">Purchase Items</h4>
+                                <div class="cardGrid-body">
+                                    <div id="jsGrid"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-offset-11">
+                            <input type="submit" value="Submit" id="btnSubmit" class="btn btn-primary" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+    </body>
+}
+
+@using (Html.BeginForm())
+{
+    <div class="container">
+        <button type="button" id ="freightButton" class="btn btn-info btn-sm" data-toggle="modal" data-target="#freightModal">Freight Voucher</button>
+        <div class="modal fade" id="freightModal" role="dialog">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header" style="background-color:#c99b4b;color:white">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title" style="text-align:center;font-weight:bold">Freight Voucher</h4>
+                    </div>
+                    <div class="modal-body" style="font-size:11px">
+                        <div class="row">
+                            @Html.HiddenFor(model => model.PurchaseModel.InvoiceNo)
+                            <div class="col-md-3">
+                                @Html.LabelFor(model => model.FreightModel.FreightAmount)
+                            </div>
+                            <div class="col-md-3">
+                                @Html.EditorFor(model => model.FreightModel.FreightAmount, new { htmlAttributes = new { @class = "form-control" } })
+                            </div>
+                        </div>
+                        <div class="row" style="padding-top:15px">
+                            <div class="col-md-3">
+                                @Html.LabelFor(model => model.FreightModel.FreightAdvance)
+                            </div>
+                            <div class="col-md-3">
+                                @Html.EditorFor(model => model.FreightModel.FreightAdvance, new { htmlAttributes = new { @class = "form-control" } })
+                            </div>
+                        </div>
+                        <div class="row" style="padding-top:15px">
+                            <div class="col-md-3">
+                                @Html.LabelFor(model => model.FreightModel.FreightBalance)
+                            </div>
+                            <div class="col-md-3">
+                                @Html.EditorFor(model => model.FreightModel.FreightBalance, new { htmlAttributes = new { @class = "form-control" } })
+                            </div>
+                        </div>
+                        <div class="row" style="padding-top:15px">
+                            <div class="col-md-3">
+                                @Html.LabelFor(model => model.FreightModel.Narration)
+                            </div>
+                            <div class="col-md-3">
+                                @Html.EditorFor(model => model.FreightModel.Narration, new { htmlAttributes = new { @class = "form-control" } })
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        <input type="button" value="Save" class="btn btn-primary" id="btnFreightSubmit" />
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+}
+
+<div class="modal fade" id="savedModal" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header" style="background-color:#239966;color:white">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title" style="text-align:center;font-weight:bold">Success</h4>
+            </div>
+            <div class="modal-body" style="font-size:11px">
+                <h4> Details saved successfully.</h4>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+
+@section Scripts {
+
+}

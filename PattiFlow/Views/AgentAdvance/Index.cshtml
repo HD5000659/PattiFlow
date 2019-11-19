@@ -1,0 +1,124 @@
+﻿@model PattiFlow.AgentAdvance
+@Scripts.Render("~/bundles/jquery")
+@Scripts.Render("~/bundles/bootstrap")
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<script type="text/javascript">
+    jQuery(document).ready(function ($) {
+
+       $('#agent a').on('click', dropdownToggleAgent);
+       function dropdownToggleAgent() {
+            var dropdown = $(this).parent().parent().prev();
+            dropdown.html($(this).html() + '&nbsp;</i><span class="caret"></span>');
+            dropdown.val($(this).prop('data-value'));
+            $('#AgentName').val($(this).html());
+        }
+        
+       $('#savedModal').hide();
+        $('#btnSubmit').click(function () {
+            var model = {
+                VoucherNumber: $('#VoucherNumber').val(),
+                Date: $('#Date').val(),
+                AgentName: $('#AgentName').val(),
+                AdvanceAmount: $('#AdvanceAmount').val(),
+                Narration: $('#Narration').val()
+            };
+            var formData = JSON.stringify(model)
+            $.ajax({
+                url: "/AgentAdvance/SaveAgentAdvanceData",
+                method: "POST",
+                data: formData,
+                contentType: 'application/json',
+                success: function (data) {
+                    $('#savedModal').modal();
+                }
+            });
+        })
+    })
+</script>
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <body>
+        <br />
+        <div class="container" style="font-size:11px">
+            <div class="form-row">
+                @Html.LabelFor(model => model.VoucherNumber)
+                @Html.EditorFor(model => model.VoucherNumber, new { htmlAttributes = new { @class = "form-control" ,@readOnly = "readOnly" } })
+                @Html.ValidationMessageFor(model => model.VoucherNumber, "", new { @class = "text-danger" })
+            </div>
+            <br />
+            <div class="form-row">
+                @Html.LabelFor(model => model.Date)
+                @Html.EditorFor(model => model.Date, new { htmlAttributes = new { @class = "form-control",@readOnly = "readOnly"  } })
+                @Html.ValidationMessageFor(model => model.Date, "", new { @class = "text-danger" })
+            </div>
+            <br />
+            <div class="form-row">
+                
+                    @Html.LabelFor(model => model.AgentName)
+                    <input type="hidden" id="AgentName" name="AgentName" value="" />
+                    <div class="dropdown">
+                        <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">
+                            Select
+                            <span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu" id="agent">
+                            @foreach (var item in ViewBag.Agents)
+                            {
+                                <li><a href="#" data-value="1">@item</a></li>
+                            }
+
+                        </ul>
+                    </div>
+                    @Html.ValidationMessageFor(model => model.AgentName, "", new { @class = "text-danger" })
+                
+            </div>
+            <br />
+            <div class="form-row">
+                @Html.LabelFor(model => model.AdvanceAmount)
+                @Html.EditorFor(model => model.AdvanceAmount, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.AdvanceAmount, "", new { @class = "text-danger" })
+            </div>
+            <br />
+            <div class="form-row">
+                @Html.LabelFor(model => model.Narration)
+                @Html.EditorFor(model => model.Narration, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Narration, "", new { @class = "text-danger" })
+            </div>
+            <div class="form-row">
+                <div class="col-md-3">
+                    <br />
+                    <br />
+                    <input type="button" value="Save" class="btn btn-primary" id="btnSubmit" />
+                    <input type="submit" value="Cancel" class="btn btn-default" />
+                </div>
+            </div>
+        </div>
+    </body>
+}
+
+<div class="modal fade" id="savedModal" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header" style="background-color:#239966;color:white">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title" style="text-align:center;font-weight:bold">Success</h4>
+            </div>
+            <div class="modal-body" style="font-size:11px">
+                <h4> Details saved successfully.</h4>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="43702c03ff294b6ca69cd99c6ddc5cc4" Name="Diagram1">
+        <EntityTypeShape EntityType="PattiFlowModel.UserRole" Width="1.5" PointX="0.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="PattiFlowModel.Agent" Width="1.5" PointX="0.75" PointY="3.75" />
+        <EntityTypeShape EntityType="PattiFlowModel.Godown" Width="1.5" PointX="2.75" PointY="3.75" />
+        <EntityTypeShape EntityType="PattiFlowModel.ItemDescription" Width="1.5" PointX="6" PointY="0.875" />
+        <EntityTypeShape EntityType="PattiFlowModel.ItemType" Width="1.5" PointX="3.75" PointY="1" />
+        <EntityTypeShape EntityType="PattiFlowModel.Lorry" Width="1.5" PointX="4.75" PointY="3.75" />
+        <EntityTypeShape EntityType="PattiFlowModel.PurchaseOrder" Width="1.5" PointX="0.75" PointY="6.75" />
+        <EntityTypeShape EntityType="PattiFlowModel.PurchaseType" Width="1.5" PointX="2.75" PointY="6.75" />
+        <AssociationConnector Association="PattiFlowModel.xyz" />
+        <EntityTypeShape EntityType="PattiFlowModel.PurchaseOrderItem" Width="1.5" PointX="3" PointY="9" />
+        <AssociationConnector Association="PattiFlowModel.abc" />
+        <EntityTypeShape EntityType="PattiFlowModel.FreightVoucher" Width="1.5" PointX="3" PointY="13.75" />
+        <AssociationConnector Association="PattiFlowModel.test" />
+        <EntityTypeShape EntityType="PattiFlowModel.AgentAdvance" Width="1.5" PointX="5.375" PointY="6.75" />
+        <EntityTypeShape EntityType="PattiFlowModel.PattiCreation" Width="1.5" PointX="7.375" PointY="3.75" />
+        <EntityTypeShape EntityType="PattiFlowModel.PattiItem" Width="1.5" PointX="7.375" PointY="8.75" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>
